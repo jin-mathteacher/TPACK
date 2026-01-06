@@ -206,11 +206,16 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 서버 시작
-app.listen(PORT, () => {
-  console.log(`🚀 TPACK 수업 설계 도우미 서버가 포트 ${PORT}에서 실행 중입니다.`);
-  console.log(`📖 브라우저에서 http://localhost:${PORT} 로 접속하세요.`);
-});
+// Vercel 배포를 위한 export (서버리스 함수)
+module.exports = app;
+
+// 로컬 개발 환경에서만 서버 시작
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 TPACK 수업 설계 도우미 서버가 포트 ${PORT}에서 실행 중입니다.`);
+    console.log(`📖 브라우저에서 http://localhost:${PORT} 로 접속하세요.`);
+  });
+}
 
 
 
