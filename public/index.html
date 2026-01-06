@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPACK 수업 설계 전문 컨설턴트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        .result-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .result-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .result-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .result-content table th,
+        .result-content table td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .result-content table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .result-content table td {
+            background: white;
+        }
+
+        .result-content h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .result-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .error-message {
+            display: none;
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #fcc;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .reset-btn:hover {
+            background: #5a6268;
+        }
+
+        /* API 키 입력 화면 스타일 */
+        .api-key-section {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .api-key-section.active {
+            display: block;
+        }
+
+        .api-key-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .api-key-section p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .api-key-section .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .api-key-section .info-box strong {
+            color: #667eea;
+        }
+
+        .api-key-section input[type="password"],
+        .api-key-section input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .api-key-section input[type="password"]:focus,
+        .api-key-section input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .api-key-section .toggle-visibility {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .api-key-section .toggle-visibility:hover {
+            background: #5a6268;
+        }
+
+        .api-key-section .save-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .api-key-section .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        .tpack-section {
+            display: block;
+        }
+
+        .api-key-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+
+        .api-key-badge:hover {
+            background: rgba(102, 126, 234, 1);
+        }
+
+        /* 진보적 탐구활동 버튼 */
+        .inquiry-badge {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(118, 75, 162, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+
+        .inquiry-badge:hover {
+            background: rgba(118, 75, 162, 1);
+        }
+
+        /* 진보적 탐구활동 섹션 */
+        .inquiry-section {
+            display: none;
+        }
+
+        .inquiry-section.active {
+            display: block;
+        }
+
+        .inquiry-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .inquiry-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .inquiry-header h2 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .inquiry-chat {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .chat-message.system {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+
+        .chat-message.user {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            text-align: right;
+        }
+
+        .chat-message strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .inquiry-input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .inquiry-input-area input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .inquiry-input-area input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        .inquiry-input-area button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .inquiry-input-area button:hover {
+            transform: translateY(-2px);
+        }
+
+        .inquiry-input-area button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .inquiry-report {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #764ba2;
+            margin-top: 20px;
+        }
+
+        .inquiry-report.active {
+            display: block;
+        }
+
+        .inquiry-report h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+        }
+
+        .inquiry-report-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .inquiry-report-item strong {
+            color: #764ba2;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .step-indicator {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- API 키 배지 (메인 화면에서만 표시) -->
+    <div class="api-key-badge" id="apiKeyBadge" style="display: none;" onclick="showApiKeySection()">
+        🔑 API 키 변경
+    </div>
+
+    <!-- 진보적 탐구활동 버튼 (TPACK 화면에서만 표시) -->
+    <div class="inquiry-badge" id="inquiryBadge" style="display: none;" onclick="showInquirySection()">
+        🔬 진보적 탐구활동
+    </div>
+
+    <!-- TPACK 수업 설계 버튼 (진보적 탐구활동 화면에서만 표시) -->
+    <div class="api-key-badge" id="tpackBadge" style="display: none; top: 70px; right: 20px;" onclick="showTpackSection()">
+        🏫 TPACK 수업 설계
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏫 TPACK 수업 설계 전문 컨설턴트</h1>
+            <p>대한민국 선생님들의 수업 고민을 해결해드립니다</p>
+        </div>
+
+        <!-- API 키 입력 섹션 -->
+        <div class="content">
+            <div class="api-key-section" id="apiKeySection">
+                <h2>🔑 OpenAI API 키 설정</h2>
+                <div class="info-box">
+                    <strong>📌 안내:</strong> 이 프로그램은 OpenAI API를 사용합니다. 
+                    API 키는 브라우저에 안전하게 저장되며, 서버로 전송되지 않습니다.
+                </div>
+                <p>
+                    <strong>API 키 발급 방법:</strong><br>
+                    1. <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>에 접속<br>
+                    2. 계정 생성 또는 로그인<br>
+                    3. API Keys 메뉴에서 새 API 키 생성<br>
+                    4. 생성된 키를 아래에 입력하세요
+                </p>
+                <form id="apiKeyForm">
+                    <div class="input-group">
+                        <label for="apiKey">OpenAI API 키</label>
+                        <input type="password" id="apiKey" name="apiKey" 
+                               placeholder="sk-..." required>
+                        <button type="button" class="toggle-visibility" onclick="toggleApiKeyVisibility()">
+                            👁️ 표시/숨기기
+                        </button>
+                    </div>
+                    <button type="submit" class="save-btn">✅ API 키 저장하고 시작하기</button>
+                </form>
+            </div>
+
+            <!-- 메인 콘텐츠 -->
+            <div class="main-content" id="mainContent">
+            <!-- TPACK 수업 설계 섹션 -->
+            <div class="tpack-section" id="tpackSection">
+            <div class="input-section" id="inputSection">
+                <h2 style="margin-bottom: 20px; color: #333;">📝 입력 가이드</h2>
+                <p style="margin-bottom: 25px; color: #666; font-size: 1.05em;">
+                    <strong>선생님, TPACK 수업 설계를 위해 아래 3가지 항목을 선택하거나 입력해 주세요.</strong>
+                </p>
+
+                <form id="lessonPlanForm">
+                    <!-- 1. 수업 주제 및 대상 -->
+                    <div class="input-group">
+                        <label for="subject">1. 수업 주제 및 대상 (직접 입력)</label>
+                        <input type="text" id="subject" name="subject" 
+                               placeholder="예: 초5 과학 - 태양계, 고2 문학 - 관동별곡" required>
+                    </div>
+
+                    <!-- 2. 선호하는 수업 방식 (P) -->
+                    <div class="input-group">
+                        <label>2. 선호하는 수업 방식 (P) [복수 선택 가능]</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="method1" name="teachingMethods" value="1">
+                                <label for="method1">(1) 강의 및 개념 설명</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="method2" name="teachingMethods" value="2">
+                                <label for="method2">(2) 탐구 및 프로젝트</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="method3" name="teachingMethods" value="3">
+                                <label for="method3">(3) 토의 및 토론</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="method4" name="teachingMethods" value="4">
+                                <label for="method4">(4) 협력 및 동료 학습</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="method5" name="teachingMethods" value="5">
+                                <label for="method5">(5) 게임 및 퀴즈</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="method6" name="teachingMethods" value="6">
+                                <label for="method6">(6) 직접 입력</label>
+                            </div>
+                        </div>
+                        <input type="text" id="methodCustom" name="methodCustom" 
+                               placeholder="직접 입력 (예: 거꾸로 수업, 역할극 등)" 
+                               style="margin-top: 10px; display: none;">
+                    </div>
+
+                    <!-- 3. 기술 및 도구 환경 (T) -->
+                    <div class="input-group">
+                        <label>3. 기술 및 도구 환경 (T) [복수 선택 가능]</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="toolA" name="techTools" value="A">
+                                <label for="toolA">(A) 학생 1인 1기기</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="toolB" name="techTools" value="B">
+                                <label for="toolB">(B) 모둠별 기기 사용</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="toolC" name="techTools" value="C">
+                                <label for="toolC">(C) 교사만 기기 사용</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="toolD" name="techTools" value="D">
+                                <label for="toolD">(D) 아날로그 혼합</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="toolE" name="techTools" value="E">
+                                <label for="toolE">(E) 특정 도구 희망</label>
+                            </div>
+                        </div>
+                        <input type="text" id="toolCustom" name="toolCustom" 
+                               placeholder="직접 입력 (예: 패들렛, 캔바, 띵커벨, AI코스웨어 등)" 
+                               style="margin-top: 10px; display: none;">
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        ✨ 수업 설계안 생성하기
+                    </button>
+                </form>
+
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="font-size: 1.1em; color: #667eea;">수업 설계안을 생성하고 있습니다...</p>
+                <p style="color: #999; margin-top: 10px;">잠시만 기다려주세요.</p>
+            </div>
+
+            <div class="result-section" id="resultSection">
+                <div class="result-content" id="resultContent"></div>
+                <button class="reset-btn" onclick="resetForm()">🔄 새로 작성하기</button>
+            </div>
+            </div>
+
+            <!-- 진보적 탐구활동 섹션 -->
+            <div class="inquiry-section" id="inquirySection">
+                <div class="inquiry-container">
+                    <div class="inquiry-header">
+                        <h2>🔬 진보적 탐구 모델 실습</h2>
+                        <p>질문이 이끄는 학습을 경험해보세요</p>
+                    </div>
+
+                    <div class="inquiry-chat" id="inquiryChat">
+                        <!-- 대화 내용이 여기에 동적으로 추가됩니다 -->
+                    </div>
+
+                    <div class="inquiry-input-area" id="inquiryInputArea">
+                        <input type="text" id="inquiryInput" placeholder="여기에 입력하세요..." disabled>
+                        <button id="inquirySubmitBtn" onclick="handleInquiryInput()" disabled>전송</button>
+                    </div>
+
+                    <div class="inquiry-report" id="inquiryReport">
+                        <h3>📋 진보적 탐구 보고서</h3>
+                        <div id="inquiryReportContent"></div>
+                        <button class="reset-btn" onclick="resetInquiry()" style="margin-top: 20px;">🔄 새로 시작하기</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API 키 관리
+        const API_KEY_STORAGE = 'tpack_openai_api_key';
+
+        // 페이지 로드 시 API 키 확인 및 서버 연결 확인
+        window.addEventListener('DOMContentLoaded', function() {
+            // file:// 프로토콜로 열렸는지 확인
+            if (window.location.protocol === 'file:') {
+                alert('⚠️ 서버가 실행되지 않았습니다!\n\n' +
+                      '이 프로그램은 서버를 통해 실행해야 합니다.\n\n' +
+                      '해결 방법:\n' +
+                      '1. 터미널(명령 프롬프트)을 열고\n' +
+                      '2. 프로젝트 폴더로 이동한 후\n' +
+                      '3. "npm start" 명령어를 실행하세요\n' +
+                      '4. 그 다음 http://localhost:3000 으로 접속하세요\n\n' +
+                      'HTML 파일을 직접 열지 마세요!');
+                return;
+            }
+
+            const savedApiKey = localStorage.getItem(API_KEY_STORAGE);
+            if (savedApiKey) {
+                showMainContent();
+            } else {
+                showApiKeySection();
+            }
+        });
+
+        function showApiKeySection() {
+            document.getElementById('apiKeySection').classList.add('active');
+            document.getElementById('mainContent').classList.remove('active');
+            document.getElementById('apiKeyBadge').style.display = 'none';
+            // 저장된 API 키가 있으면 입력 필드에 표시
+            const savedApiKey = localStorage.getItem(API_KEY_STORAGE);
+            if (savedApiKey) {
+                document.getElementById('apiKey').value = savedApiKey;
+            }
+        }
+
+        function showMainContent() {
+            document.getElementById('apiKeySection').classList.remove('active');
+            document.getElementById('mainContent').classList.add('active');
+            document.getElementById('apiKeyBadge').style.display = 'block';
+            showTpackSection(); // 기본적으로 TPACK 섹션 표시
+        }
+
+        function showTpackSection() {
+            document.getElementById('tpackSection').style.display = 'block';
+            document.getElementById('inquirySection').classList.remove('active');
+            document.getElementById('apiKeyBadge').style.display = 'block';
+            document.getElementById('inquiryBadge').style.display = 'block';
+            document.getElementById('tpackBadge').style.display = 'none';
+        }
+
+        function showInquirySection() {
+            document.getElementById('tpackSection').style.display = 'none';
+            document.getElementById('inquirySection').classList.add('active');
+            document.getElementById('apiKeyBadge').style.display = 'none';
+            document.getElementById('inquiryBadge').style.display = 'none';
+            document.getElementById('tpackBadge').style.display = 'block';
+            // 진보적 탐구활동 시작
+            if (!window.inquiryStarted) {
+                startInquiry();
+            }
+        }
+
+        function toggleApiKeyVisibility() {
+            const apiKeyInput = document.getElementById('apiKey');
+            if (apiKeyInput.type === 'password') {
+                apiKeyInput.type = 'text';
+            } else {
+                apiKeyInput.type = 'password';
+            }
+        }
+
+        // API 키 폼 제출
+        document.getElementById('apiKeyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            
+            if (!apiKey) {
+                alert('API 키를 입력해주세요.');
+                return;
+            }
+
+            if (!apiKey.startsWith('sk-')) {
+                if (!confirm('입력하신 키가 OpenAI API 키 형식이 아닌 것 같습니다. 계속하시겠습니까?')) {
+                    return;
+                }
+            }
+
+            // API 키 저장
+            localStorage.setItem(API_KEY_STORAGE, apiKey);
+            showMainContent();
+        });
+
+        // 저장된 API 키 가져오기
+        function getApiKey() {
+            return localStorage.getItem(API_KEY_STORAGE);
+        }
+        // 직접 입력 체크박스 처리
+        document.getElementById('method6').addEventListener('change', function() {
+            document.getElementById('methodCustom').style.display = this.checked ? 'block' : 'none';
+        });
+
+        document.getElementById('toolE').addEventListener('change', function() {
+            document.getElementById('toolCustom').style.display = this.checked ? 'block' : 'none';
+        });
+
+        // 폼 제출 처리
+        document.getElementById('lessonPlanForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // 입력값 수집
+            const subject = document.getElementById('subject').value.trim();
+            const teachingMethods = Array.from(document.querySelectorAll('input[name="teachingMethods"]:checked'))
+                .map(cb => cb.value);
+            const techTools = Array.from(document.querySelectorAll('input[name="techTools"]:checked'))
+                .map(cb => cb.value);
+
+            // 직접 입력 처리
+            const methodCustom = document.getElementById('methodCustom').value.trim();
+            if (methodCustom && teachingMethods.includes('6')) {
+                teachingMethods[teachingMethods.indexOf('6')] = methodCustom;
+            }
+
+            const toolCustom = document.getElementById('toolCustom').value.trim();
+            if (toolCustom && techTools.includes('E')) {
+                techTools[techTools.indexOf('E')] = toolCustom;
+            }
+
+            // 유효성 검사
+            if (!subject) {
+                showError('수업 주제를 입력해주세요.');
+                return;
+            }
+
+            if (teachingMethods.length === 0) {
+                showError('최소 1개 이상의 수업 방식을 선택해주세요.');
+                return;
+            }
+
+            if (techTools.length === 0) {
+                showError('최소 1개 이상의 기술 도구를 선택해주세요.');
+                return;
+            }
+
+            // UI 업데이트
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('resultSection').classList.remove('active');
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('submitBtn').disabled = true;
+
+            // API 키 확인
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                showError('API 키가 설정되지 않았습니다. API 키를 입력해주세요.');
+                showApiKeySection();
+                document.getElementById('inputSection').style.display = 'block';
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('submitBtn').disabled = false;
+                return;
+            }
+
+            try {
+                // 서버 연결 확인 (file:// 프로토콜 체크)
+                if (window.location.protocol === 'file:') {
+                    throw new Error('서버가 실행되지 않았습니다. 터미널에서 "npm start" 명령어로 서버를 실행한 후 http://localhost:3000 으로 접속해주세요.');
+                }
+
+                // API 호출
+                const response = await fetch('/api/generate-lesson-plan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        subject,
+                        teachingMethods,
+                        techTools,
+                        apiKey: apiKey
+                    })
+                });
+
+                // 네트워크 오류 처리
+                if (!response) {
+                    throw new Error('서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요. (npm start)');
+                }
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || '서버 오류가 발생했습니다.');
+                }
+
+                // 결과 표시
+                displayResult(data.lessonPlan);
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // CORS 오류나 네트워크 오류인 경우 더 명확한 메시지 표시
+                let errorMessage = error.message || '수업 설계안 생성 중 오류가 발생했습니다.';
+                
+                if (error.message.includes('Failed to fetch') || 
+                    error.message.includes('CORS') || 
+                    error.message.includes('network')) {
+                    errorMessage = '서버에 연결할 수 없습니다.\n\n' +
+                                  '해결 방법:\n' +
+                                  '1. 터미널에서 "npm start" 명령어 실행\n' +
+                                  '2. 브라우저에서 http://localhost:3000 으로 접속\n' +
+                                  '3. HTML 파일을 직접 열지 마세요!';
+                }
+                
+                showError(errorMessage);
+                document.getElementById('inputSection').style.display = 'block';
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+
+        function displayResult(lessonPlan) {
+            const resultContent = document.getElementById('resultContent');
+            
+            // 마크다운을 HTML로 변환
+            let html = lessonPlan;
+            
+            // 표 처리 (마크다운 표를 HTML 표로 변환)
+            const tableRegex = /(\|.+\|(?:\n\|.+\|)*)/g;
+            html = html.replace(tableRegex, function(match) {
+                const lines = match.trim().split('\n');
+                let tableHtml = '<table>';
+                let isFirstRow = true;
+                
+                lines.forEach((line, index) => {
+                    // 구분선 행은 건너뛰기
+                    if (line.includes('---')) {
+                        return;
+                    }
+                    
+                    const cells = line.split('|').map(c => c.trim()).filter(c => c);
+                    if (cells.length === 0) return;
+                    
+                    const tag = isFirstRow ? 'th' : 'td';
+                    tableHtml += '<tr>';
+                    
+                    cells.forEach(cell => {
+                        // 마크다운 포맷팅 처리
+                        let cellContent = cell
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                            .replace(/⚠️/g, '⚠️')
+                            .replace(/\n/g, '<br>');
+                        
+                        tableHtml += `<${tag}>${cellContent}</${tag}>`;
+                    });
+                    
+                    tableHtml += '</tr>';
+                    isFirstRow = false;
+                });
+                
+                tableHtml += '</table>';
+                return tableHtml;
+            });
+            
+            // 제목 처리
+            html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+            
+            // 인용구 처리
+            html = html.replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>');
+            
+            // 나머지 마크다운 포맷팅
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // 문단 처리 (연속된 줄바꿈을 문단으로)
+            html = html.split('\n\n').map(para => {
+                para = para.trim();
+                if (!para) return '';
+                if (para.startsWith('<')) return para; // 이미 HTML 태그
+                return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
+            }).join('');
+
+            resultContent.innerHTML = html;
+            document.getElementById('resultSection').classList.add('active');
+            document.getElementById('inputSection').style.display = 'none';
+            
+            // 결과 섹션으로 스크롤
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            // 줄바꿈을 <br>로 변환
+            errorDiv.innerHTML = message.replace(/\n/g, '<br>');
+            errorDiv.classList.add('active');
+            // 오류 메시지로 스크롤
+            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function resetForm() {
+            document.getElementById('lessonPlanForm').reset();
+            document.getElementById('methodCustom').style.display = 'none';
+            document.getElementById('toolCustom').style.display = 'none';
+            document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('resultSection').classList.remove('active');
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('resultContent').innerHTML = '';
+        }
+
+        // 진보적 탐구활동 관련 변수
+        let inquiryState = {
+            step: 0, // 0: 시작, 1: 질문, 2: 설명, 3: 확인, 4: 확장, 5: 완료
+            topic: '',
+            question: '',
+            explanation: '',
+            unknowns: '',
+            expandedQuestion: ''
+        };
+
+        // 진보적 탐구활동 시작
+        function startInquiry() {
+            window.inquiryStarted = true;
+            inquiryState = {
+                step: 0,
+                topic: '',
+                question: '',
+                explanation: '',
+                unknowns: '',
+                expandedQuestion: ''
+            };
+            
+            const chatArea = document.getElementById('inquiryChat');
+            chatArea.innerHTML = '';
+            
+            addSystemMessage('선생님, 안녕하세요! 진보적 탐구 모델을 실습해 보겠습니다. 학생들과 탐구해보고 싶은 주제(예: 식물은 감각이 있을까?, 삼각형의 내각의 합은 왜 180도일까?)를 하나만 말씀해 주세요.');
+            
+            document.getElementById('inquiryInput').disabled = false;
+            document.getElementById('inquirySubmitBtn').disabled = false;
+            document.getElementById('inquiryInput').focus();
+            document.getElementById('inquiryReport').classList.remove('active');
+        }
+
+        // 시스템 메시지 추가
+        function addSystemMessage(text) {
+            const chatArea = document.getElementById('inquiryChat');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message system';
+            messageDiv.innerHTML = `<strong>🔬 탐구 코치:</strong> ${text}`;
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // 사용자 메시지 추가
+        function addUserMessage(text) {
+            const chatArea = document.getElementById('inquiryChat');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message user';
+            messageDiv.innerHTML = `<strong>👤 선생님:</strong> ${text}`;
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // 진보적 탐구활동 입력 처리
+        async function handleInquiryInput() {
+            const input = document.getElementById('inquiryInput');
+            const userInput = input.value.trim();
+            
+            if (!userInput) return;
+            
+            addUserMessage(userInput);
+            input.value = '';
+            input.disabled = true;
+            document.getElementById('inquirySubmitBtn').disabled = true;
+            
+            try {
+                if (inquiryState.step === 0) {
+                    // 1단계: 주제 선정
+                    inquiryState.topic = userInput;
+                    inquiryState.step = 1;
+                    addSystemMessage('좋은 주제입니다! 이 주제로 탐구를 시작하기 위해 가장 먼저 학생들에게 던질 질문은 무엇인가요?');
+                } else if (inquiryState.step === 1) {
+                    // 2단계: 질문 던지기
+                    inquiryState.question = userInput;
+                    inquiryState.step = 2;
+                    addSystemMessage('훌륭한 질문입니다! 이제 이 질문에 대해 학생들이나 일반적인 사람들이 가질 법한 <strong>잠정적인 설명(가설)</strong>이나 <strong>현재 알고 있는 지식</strong>을 적어보세요. 정답을 바로 찾는 게 아니라, 자신만의 설명을 만드는 과정이 중요합니다.');
+                } else if (inquiryState.step === 2) {
+                    // 3단계: 설명 만들기
+                    inquiryState.explanation = userInput;
+                    inquiryState.step = 3;
+                    
+                    // AI를 사용하여 확인 및 모른하기 단계 진행
+                    const apiKey = getApiKey();
+                    if (!apiKey) {
+                        addSystemMessage('API 키가 설정되지 않았습니다. API 키를 먼저 설정해주세요.');
+                        input.disabled = false;
+                        document.getElementById('inquirySubmitBtn').disabled = false;
+                        return;
+                    }
+                    
+                    addSystemMessage('잠시만요, 설명을 분석하고 있습니다...');
+                    
+                    const response = await fetch('/api/inquiry-check', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            topic: inquiryState.topic,
+                            question: inquiryState.question,
+                            explanation: userInput,
+                            apiKey: apiKey
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    if (response.ok) {
+                        inquiryState.unknowns = data.unknowns;
+                        inquiryState.step = 4;
+                        addSystemMessage(data.feedback);
+                        addSystemMessage('이제 확인된 모르는 점을 해결하기 위해, 초기 질문을 더 구체적이거나 심화된 <strong>새로운 질문</strong>으로 발전시켜 보세요. 이것이 바로 질문이 이끄는 학습의 핵심입니다.');
+                    } else {
+                        throw new Error(data.error || '오류가 발생했습니다.');
+                    }
+                } else if (inquiryState.step === 4) {
+                    // 4단계: 질문 확장
+                    inquiryState.expandedQuestion = userInput;
+                    inquiryState.step = 5;
+                    
+                    // 보고서 생성
+                    generateInquiryReport();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addSystemMessage('오류가 발생했습니다: ' + error.message);
+            }
+            
+            if (inquiryState.step < 5) {
+                input.disabled = false;
+                document.getElementById('inquirySubmitBtn').disabled = false;
+                input.focus();
+            }
+        }
+
+        // Enter 키로 전송
+        document.getElementById('inquiryInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !this.disabled) {
+                handleInquiryInput();
+            }
+        });
+
+        // 진보적 탐구 보고서 생성
+        function generateInquiryReport() {
+            const reportContent = document.getElementById('inquiryReportContent');
+            reportContent.innerHTML = `
+                <div class="inquiry-report-item">
+                    <strong>1. 초기 질문:</strong>
+                    ${inquiryState.question}
+                </div>
+                <div class="inquiry-report-item">
+                    <strong>2. 잠정적 설명:</strong>
+                    ${inquiryState.explanation}
+                </div>
+                <div class="inquiry-report-item">
+                    <strong>3. 탐구의 단서(모르는 것):</strong>
+                    ${inquiryState.unknowns}
+                </div>
+                <div class="inquiry-report-item">
+                    <strong>4. 확장된 질문:</strong>
+                    ${inquiryState.expandedQuestion}
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #f0f4ff; border-radius: 5px; border-left: 4px solid #667eea;">
+                    <strong>💡 코멘트:</strong> 선생님, 이렇게 질문이 꼬리를 물고 지식이 확장되는 과정을 학생들과 경험해 보세요!
+                </div>
+            `;
+            
+            document.getElementById('inquiryReport').classList.add('active');
+            document.getElementById('inquiryInputArea').style.display = 'none';
+            
+            addSystemMessage('탐구 실습이 완료되었습니다! 아래 보고서를 확인해보세요.');
+        }
+
+        // 진보적 탐구활동 초기화
+        function resetInquiry() {
+            window.inquiryStarted = false;
+            document.getElementById('inquiryChat').innerHTML = '';
+            document.getElementById('inquiryReport').classList.remove('active');
+            document.getElementById('inquiryInputArea').style.display = 'flex';
+            document.getElementById('inquiryInput').value = '';
+            startInquiry();
+        }
+    </script>
+</body>
+</html>
+
