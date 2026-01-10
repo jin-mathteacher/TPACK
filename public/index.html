@@ -561,23 +561,23 @@
         <!-- API 키 입력 섹션 -->
         <div class="content">
             <div class="api-key-section" id="apiKeySection">
-                <h2>🔑 OpenAI API 키 설정</h2>
+                <h2>🔑 Google AI Studio API 키 설정</h2>
                 <div class="info-box">
-                    <strong>📌 안내:</strong> 이 프로그램은 OpenAI API를 사용합니다. 
+                    <strong>📌 안내:</strong> 이 프로그램은 Google AI Studio(Gemini) API를 사용합니다. 
                     API 키는 브라우저에 안전하게 저장되며, 서버로 전송되지 않습니다.
                 </div>
                 <p>
                     <strong>API 키 발급 방법:</strong><br>
-                    1. <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>에 접속<br>
-                    2. 계정 생성 또는 로그인<br>
-                    3. API Keys 메뉴에서 새 API 키 생성<br>
+                    1. <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>에 접속<br>
+                    2. Google 계정으로 로그인<br>
+                    3. "Create API Key" 버튼 클릭하여 새 API 키 생성<br>
                     4. 생성된 키를 아래에 입력하세요
                 </p>
                 <form id="apiKeyForm">
                     <div class="input-group">
-                        <label for="apiKey">OpenAI API 키</label>
+                        <label for="apiKey">Google AI Studio API 키</label>
                         <input type="password" id="apiKey" name="apiKey" 
-                               placeholder="sk-..." required>
+                               placeholder="AIza..." required>
                         <button type="button" class="toggle-visibility" onclick="toggleApiKeyVisibility()">
                             👁️ 표시/숨기기
                         </button>
@@ -718,7 +718,7 @@
 
     <script>
         // API 키 관리
-        const API_KEY_STORAGE = 'tpack_openai_api_key';
+        const API_KEY_STORAGE = 'tpack_google_ai_api_key';
 
         // 페이지 로드 시 API 키 확인 및 서버 연결 확인
         window.addEventListener('DOMContentLoaded', function() {
@@ -800,8 +800,8 @@
                 return;
             }
 
-            if (!apiKey.startsWith('sk-')) {
-                if (!confirm('입력하신 키가 OpenAI API 키 형식이 아닌 것 같습니다. 계속하시겠습니까?')) {
+            if (!apiKey.startsWith('AIza')) {
+                if (!confirm('입력하신 키가 Google AI Studio API 키 형식이 아닌 것 같습니다. 계속하시겠습니까?')) {
                     return;
                 }
             }
