@@ -94,17 +94,17 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
 중요: 반드시 마크다운 표 형식으로 작성하고, 각 단계별로 구체적이고 실용적인 내용을 제공해주세요.`;
 
     // Google Gemini API 호출
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
-    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
-    
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: combinedPrompt }] }],
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-pro',
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 2000,
       },
     });
+    
+    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
+    
+    const result = await model.generateContent(combinedPrompt);
 
     const lessonPlan = result.response.text();
 
@@ -169,17 +169,17 @@ app.post('/api/inquiry-check', async (req, res) => {
 응답은 200자 이내로 간결하게 작성해주세요.`;
 
     // Google Gemini API 호출
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-    
-    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
-    
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: combinedPrompt }] }],
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-pro',
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 300,
       },
     });
+    
+    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
+    
+    const result = await model.generateContent(combinedPrompt);
 
     const feedback = result.response.text();
     
