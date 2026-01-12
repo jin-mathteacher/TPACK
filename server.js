@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const OpenAI = require('openai');
 const path = require('path');
 
 dotenv.config();
@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Google Gemini API 클라이언트는 요청마다 동적으로 생성 (API 키를 클라이언트에서 받음)
+// OpenAI API 클라이언트는 요청마다 동적으로 생성 (API 키를 클라이언트에서 받음)
 
 // TPACK 수업 설계안 생성 API
 app.post('/api/generate-lesson-plan', async (req, res) => {
@@ -34,8 +34,10 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
       });
     }
 
-    // 클라이언트에서 제공한 API 키로 Google Gemini API 클라이언트 생성
-    const genAI = new GoogleGenerativeAI(apiKey);
+    // 클라이언트에서 제공한 API 키로 OpenAI API 클라이언트 생성
+    const openai = new OpenAI({
+      apiKey: apiKey,
+    });
 
     // 교수법(P) 매핑
     const methodMap = {
@@ -93,22 +95,25 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
 
 중요: 반드시 마크다운 표 형식으로 작성하고, 각 단계별로 구체적이고 실용적인 내용을 제공해주세요.`;
 
-    // Google Gemini API 호출
-    // 무료로 사용 가능한 gemini-1.5-flash 모델 사용
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2000,
-      },
+    // OpenAI API 호출
+    // gpt-3.5-turbo 모델 사용 (비용 효율적)
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: systemPrompt
+        },
+        {
+          role: 'user',
+          content: userPrompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
     });
-    
-    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
-    
-    // 간단한 문자열 방식으로 호출
-    const result = await model.generateContent(combinedPrompt);
 
-    const lessonPlan = result.response.text();
+    const lessonPlan = completion.choices[0].message.content;
 
     res.json({ 
       success: true,
@@ -145,8 +150,10 @@ app.post('/api/inquiry-check', async (req, res) => {
       });
     }
 
-    // 클라이언트에서 제공한 API 키로 Google Gemini API 클라이언트 생성
-    const genAI = new GoogleGenerativeAI(apiKey);
+    // 클라이언트에서 제공한 API 키로 OpenAI API 클라이언트 생성
+    const openai = new OpenAI({
+      apiKey: apiKey,
+    });
 
     // 프롬프트 구성
     const systemPrompt = `당신은 교사들이 '진보적 탐구 모델(Progressive Inquiry Model)'을 쉽게 실습해 볼 수 있도록 돕는 '탐구 학습 코치'입니다.
@@ -173,22 +180,25 @@ app.post('/api/inquiry-check', async (req, res) => {
 
 응답은 200자 이내로 간결하게 작성해주세요.`;
 
-    // Google Gemini API 호출
-    // 무료로 사용 가능한 gemini-1.5-flash 모델 사용
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 300,
-      },
+    // OpenAI API 호출
+    // gpt-3.5-turbo 모델 사용 (비용 효율적)
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: systemPrompt
+        },
+        {
+          role: 'user',
+          content: userPrompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 300,
     });
-    
-    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
-    
-    // 간단한 문자열 방식으로 호출
-    const result = await model.generateContent(combinedPrompt);
 
-    const feedback = result.response.text();
+    const feedback = completion.choices[0].message.content;
     
     // 모르는 점 추출 (간단한 추출 로직)
     const unknowns = feedback;
