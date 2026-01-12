@@ -94,17 +94,20 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
 중요: 반드시 마크다운 표 형식으로 작성하고, 각 단계별로 구체적이고 실용적인 내용을 제공해주세요.`;
 
     // Google Gemini API 호출
+    // 최신 모델 사용 (gemini-1.5-flash 또는 gemini-1.5-pro)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-pro',
+      model: 'gemini-1.5-flash',
+    });
+    
+    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
+    
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: combinedPrompt }] }],
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 2000,
       },
     });
-    
-    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
-    
-    const result = await model.generateContent(combinedPrompt);
 
     const lessonPlan = result.response.text();
 
@@ -115,9 +118,12 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
 
   } catch (error) {
     console.error('Error generating lesson plan:', error);
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ 
       error: '수업 설계안 생성 중 오류가 발생했습니다.',
-      details: error.message 
+      details: error.message || '알 수 없는 오류',
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
@@ -169,17 +175,20 @@ app.post('/api/inquiry-check', async (req, res) => {
 응답은 200자 이내로 간결하게 작성해주세요.`;
 
     // Google Gemini API 호출
+    // 최신 모델 사용 (gemini-1.5-flash 또는 gemini-1.5-pro)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-pro',
+      model: 'gemini-1.5-flash',
+    });
+    
+    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
+    
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: combinedPrompt }] }],
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 300,
       },
     });
-    
-    const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
-    
-    const result = await model.generateContent(combinedPrompt);
 
     const feedback = result.response.text();
     

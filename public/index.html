@@ -908,7 +908,11 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || '서버 오류가 발생했습니다.');
+                    let errorMessage = data.error || '서버 오류가 발생했습니다.';
+                    if (data.details) {
+                        errorMessage += '\n\n상세 오류: ' + data.details;
+                    }
+                    throw new Error(errorMessage);
                 }
 
                 // 결과 표시
