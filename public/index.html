@@ -722,6 +722,9 @@
 
         // 페이지 로드 시 API 키 확인 및 서버 연결 확인
         window.addEventListener('DOMContentLoaded', function() {
+            // 새로고침 시 상태 초기화
+            window.inquiryStarted = false;
+            
             // file:// 프로토콜로 열렸는지 확인
             if (window.location.protocol === 'file:') {
                 alert('⚠️ 서버가 실행되지 않았습니다!\n\n' +
@@ -735,46 +738,78 @@
                 return;
             }
 
-            const savedApiKey = localStorage.getItem(API_KEY_STORAGE);
-            if (savedApiKey) {
-                showMainContent();
-            } else {
+            try {
+                const savedApiKey = localStorage.getItem(API_KEY_STORAGE);
+                if (savedApiKey) {
+                    showMainContent();
+                } else {
+                    showApiKeySection();
+                }
+            } catch (error) {
+                console.error('초기화 중 오류:', error);
                 showApiKeySection();
             }
         });
 
         function showApiKeySection() {
-            document.getElementById('apiKeySection').classList.add('active');
-            document.getElementById('mainContent').classList.remove('active');
-            document.getElementById('apiKeyBadge').style.display = 'none';
+            const apiKeySection = document.getElementById('apiKeySection');
+            const mainContent = document.getElementById('mainContent');
+            const apiKeyBadge = document.getElementById('apiKeyBadge');
+            const apiKeyInput = document.getElementById('apiKey');
+            
+            if (apiKeySection) apiKeySection.classList.add('active');
+            if (mainContent) mainContent.classList.remove('active');
+            if (apiKeyBadge) apiKeyBadge.style.display = 'none';
+            
             // 저장된 API 키가 있으면 입력 필드에 표시
             const savedApiKey = localStorage.getItem(API_KEY_STORAGE);
-            if (savedApiKey) {
-                document.getElementById('apiKey').value = savedApiKey;
+            if (savedApiKey && apiKeyInput) {
+                apiKeyInput.value = savedApiKey;
             }
         }
 
         function showMainContent() {
-            document.getElementById('apiKeySection').classList.remove('active');
-            document.getElementById('mainContent').classList.add('active');
-            document.getElementById('apiKeyBadge').style.display = 'block';
-            showTpackSection(); // 기본적으로 TPACK 섹션 표시
+            const apiKeySection = document.getElementById('apiKeySection');
+            const mainContent = document.getElementById('mainContent');
+            const apiKeyBadge = document.getElementById('apiKeyBadge');
+            
+            if (apiKeySection) apiKeySection.classList.remove('active');
+            if (mainContent) mainContent.classList.add('active');
+            if (apiKeyBadge) apiKeyBadge.style.display = 'block';
+            
+            // 기본적으로 TPACK 섹션 표시
+            setTimeout(() => {
+                showTpackSection();
+            }, 100); // DOM이 완전히 준비될 때까지 약간 대기
         }
 
         function showTpackSection() {
-            document.getElementById('tpackSection').style.display = 'block';
-            document.getElementById('inquirySection').classList.remove('active');
-            document.getElementById('apiKeyBadge').style.display = 'block';
-            document.getElementById('inquiryBadge').style.display = 'block';
-            document.getElementById('tpackBadge').style.display = 'none';
+            const tpackSection = document.getElementById('tpackSection');
+            const inquirySection = document.getElementById('inquirySection');
+            const apiKeyBadge = document.getElementById('apiKeyBadge');
+            const inquiryBadge = document.getElementById('inquiryBadge');
+            const tpackBadge = document.getElementById('tpackBadge');
+            
+            if (tpackSection) tpackSection.style.display = 'block';
+            if (inquirySection) inquirySection.classList.remove('active');
+            if (apiKeyBadge) apiKeyBadge.style.display = 'block';
+            if (inquiryBadge) inquiryBadge.style.display = 'block';
+            if (tpackBadge) tpackBadge.style.display = 'none';
         }
 
         function showInquirySection() {
-            document.getElementById('tpackSection').style.display = 'none';
-            document.getElementById('inquirySection').classList.add('active');
-            document.getElementById('apiKeyBadge').style.display = 'none';
-            document.getElementById('inquiryBadge').style.display = 'none';
-            document.getElementById('tpackBadge').style.display = 'block';
+            const tpackSection = document.getElementById('tpackSection');
+            const inquirySection = document.getElementById('inquirySection');
+            const apiKeyBadge = document.getElementById('apiKeyBadge');
+            const inquiryBadge = document.getElementById('inquiryBadge');
+            const tpackBadge = document.getElementById('tpackBadge');
+            
+            if (tpackSection) tpackSection.style.display = 'none';
+            if (inquirySection) inquirySection.classList.add('active');
+            if (apiKeyBadge) apiKeyBadge.style.display = 'none';
+            if (inquiryBadge) inquiryBadge.style.display = 'none';
+            if (tpackBadge) tpackBadge.style.display = 'block';
+            
             // 진보적 탐구활동 시작
             if (!window.inquiryStarted) {
                 startInquiry();
@@ -1167,11 +1202,14 @@
         }
 
         // Enter 키로 전송
-        document.getElementById('inquiryInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !this.disabled) {
-                handleInquiryInput();
-            }
-        });
+        const inquiryInput = document.getElementById('inquiryInput');
+        if (inquiryInput) {
+            inquiryInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !this.disabled) {
+                    handleInquiryInput();
+                }
+            });
+        }
 
         // 진보적 탐구 보고서 생성
         function generateInquiryReport() {

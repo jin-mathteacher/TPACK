@@ -94,9 +94,9 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
 중요: 반드시 마크다운 표 형식으로 작성하고, 각 단계별로 구체적이고 실용적인 내용을 제공해주세요.`;
 
     // Google Gemini API 호출
-    // 최신 모델 사용 (gemini-1.5-flash 또는 gemini-1.5-pro)
+    // 사용 가능한 모델 사용 (gemini-pro가 가장 안정적)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
+      model: 'gemini-pro',
     });
     
     const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
@@ -175,9 +175,9 @@ app.post('/api/inquiry-check', async (req, res) => {
 응답은 200자 이내로 간결하게 작성해주세요.`;
 
     // Google Gemini API 호출
-    // 최신 모델 사용 (gemini-1.5-flash 또는 gemini-1.5-pro)
+    // 사용 가능한 모델 사용 (gemini-pro가 가장 안정적)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
+      model: 'gemini-pro',
     });
     
     const combinedPrompt = `${systemPrompt}\n\n${userPrompt}`;
