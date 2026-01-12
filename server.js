@@ -96,7 +96,7 @@ app.post('/api/generate-lesson-plan', async (req, res) => {
     // Google Gemini API 호출
     // 무료로 사용 가능한 gemini-1.5-flash 모델 사용
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash'',
+      model: 'gemini-1.5-flash',
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 2000,
